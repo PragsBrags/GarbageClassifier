@@ -1,19 +1,24 @@
 import os
 import cv2
 
-from ingestion.videofeed import sampling
-from services.inference.model import YOLO_Inference
+from ingestion.sampler import sampling
+from ingestion.video_source import video_source
+from services.inference.registry import build_inference_service
+from services.inference.service import InferenceService
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(script_dir, 'models/YoloGC.pt')
 
-cap = cv2.VideoCapture(os.path.join(script_dir,'test/test_video.mp4'))
 def main():
-    yolo = YOLO_Inference(model_path)
 
+    cap = video_source()
+
+    InferenceService = build_inference_service(
+        model_name=selected_model,
+        project_root=script_dir,
+    )
+    
     for frames in sampling(cap):
-        predictions = yolo.predict(frames)
-
+        predictions = InferenceService.predict(frames)
         print("Current Counts:", predictions)
 
 if __name__ == "__main__":
