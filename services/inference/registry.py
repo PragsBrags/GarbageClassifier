@@ -26,7 +26,8 @@ def build_inference_service(model_name, config, project_root):
             roi=config["preprocessing"]["roi"],
         )
         adapter = FRCNN_Inference(
-            model_path = os.path.join(project_root, model_config["weights"])
+            model_path = os.path.join(project_root, model_config["weights"]),
+            class_names = model_config["class_names"]
         )
 
     return inferenceService(adapter, preprocessor)

@@ -35,6 +35,8 @@ def roi_cropping(frame, roi_config):
 
     return xmin, xmax, ymin, ymax
 
+def BGR_to_RGB(frame):
+    return cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
 class YoloPreprocessor:
     def __init__(self, input_size=(640, 640), roi=None):
@@ -60,5 +62,5 @@ class RCNNPreprocessor:
     def process(self, frame):
         xmin, xmax, ymin, ymax = roi_cropping(frame, self.roi)
         cropped_frame = frame[ymin:ymax, xmin:xmax]
-        return letterbox(cropped_frame, resized_shape=self.input_size)
+        return BGR_to_RGB(letterbox(cropped_frame, resized_shape=self.input_size))
 

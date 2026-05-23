@@ -29,3 +29,10 @@ models:
     preprocessor: fasterrcnn
     weights: models/weights/FasterRCNN_GC.pth
     input_size: [640, 640]
+    class_names:
+    - plastic
+    - paper
+    - metal
+    - glass
+    - cardboard
+    - trash
