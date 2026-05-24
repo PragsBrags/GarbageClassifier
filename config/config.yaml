@@ -1,5 +1,5 @@
 pipeline:
-  model: FRCNN_gc
+  model: yolo_gc
 
 video:
   # Use a relative file path for a video, or use 0 for the default webcam.
@@ -30,9 +30,17 @@ models:
     weights: models/weights/FasterRCNN_GC.pth
     input_size: [640, 640]
     class_names:
-    - plastic
-    - paper
-    - metal
-    - glass
-    - cardboard
-    - trash
+    - BIODEGRADABLE
+    - CARDBOARD
+    - GLASS
+    - METAL
+    - PAPER
+    - PLASTIC
+
+database:
+  service: true
+  url: postgresql://postgres:god123great@localhost:5432/garbage_count
+  create_tables: true
+  echo: true
+  pool_size: 5
+  max_overflow: 10

@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -6,7 +8,7 @@ from database.models import Base
 class DatabaseConnection:
     def __init__(self, database):
         self.enabled = database["service"]
-        self.create_tables = database["create_tables"]
+        self.create_tables_startup = database["create_tables"]
         self.engine = None
         self.session_factory = None
 
@@ -22,9 +24,10 @@ class DatabaseConnection:
         self.session_factory = sessionmaker(bind=self.engine, expire_on_commit=False)
 
     def create_tables(self) -> None:
-        if self.engine is not None and self.create_tables:
+        if self.engine is not None and self.create_tables_startup:
             Base.metadata.create_all(self.engine)
-    
+            
+    @contextmanager
     def session(self):
         if self.session_factory is None:
             yield None

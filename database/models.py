@@ -10,7 +10,7 @@ class IngestionDetails(Base):
     __tablename__ = "ingestion_details"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    ingestion_id: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    ingestion_id: Mapped[str] = mapped_column(String(64), index=True, nullable=False, unique=True)
     uploaded_date: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     job: Mapped[list["ClassificationCount"]] = relationship(back_populates="ingestion_details")
