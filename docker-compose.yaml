@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.2-pg17-bookworm
+    container_name: garbage-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: god123great
+      POSTGRES_DB: garbage_count
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+
+volumes:
+  postgres_data:

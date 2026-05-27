@@ -39,8 +39,8 @@ models:
 
 database:
   service: true
-  url: postgresql://postgres:god123great@localhost:5432/garbage_count
+  url: postgresql://postgres:god123great@localhost:5433/garbage_count
   create_tables: true
-  echo: true
+  echo: false
   pool_size: 5
   max_overflow: 10

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from database.models import ClassificationCount, IngestionDetails
+from database.models import ClassificationCount, IngestionDetails, TextEmbeddings
 
 class ResultRepository:
     def create_job(self, db: Session, ingestion_id:str) -> IngestionDetails :
@@ -21,6 +21,15 @@ class ResultRepository:
             ingestion_id=ingestion_id,
             classification=classification,
             count=count,
+        )
+        db.add(row)
+        db.flush()
+
+    def save_embeddings(self, db:Session, ingestion_id:str, text:str, embeddings:dict) -> None:
+        row = TextEmbeddings(
+            ingestion_id=ingestion_id,
+            text=text,
+            embeddings=embeddings,
         )
         db.add(row)
         db.flush()

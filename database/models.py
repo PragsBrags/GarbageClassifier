@@ -2,6 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text, func, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship, DeclarativeBase
+from pgvector.sqlalchemy import Vector
 
 class Base(DeclarativeBase):
     pass
@@ -14,6 +15,7 @@ class IngestionDetails(Base):
     uploaded_date: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     job: Mapped[list["ClassificationCount"]] = relationship(back_populates="ingestion_details")
+    embedding: Mapped["TextEmbeddings"] = relationship(back_populates="ingestion_details")
 
 class ClassificationCount(Base):
     __tablename__ = "classification_count"
@@ -24,3 +26,13 @@ class ClassificationCount(Base):
     count: Mapped[int] = mapped_column(Integer, default=0)
 
     ingestion_details: Mapped[IngestionDetails] = relationship(back_populates="job")
+
+class TextEmbeddings(Base):
+    __tablename__ = "text_embeddings"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    ingestion_id: Mapped[str] = mapped_column(String(64), ForeignKey("ingestion_details.ingestion_id"), index=True)
+    text: Mapped[str] = mapped_column(Text)
+    embeddings: Mapped[list[float]] = mapped_column(Vector(768), nullable=False)
+
+    ingestion_details: Mapped["IngestionDetails"] = relationship(back_populates="embedding")

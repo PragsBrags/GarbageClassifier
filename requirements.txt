@@ -1,6 +1,16 @@
 opencv-python
 PyYAML
 ultralytics
+numpy 
 
 SQLAlchemy
 psycopg2
+pgvector
+
+langchain
+langchain-postgres
+ollama
+langchain-ollama
+
+torch
+torchvision
