@@ -24,6 +24,7 @@ class ClassificationCount(Base):
     ingestion_id: Mapped[str] = mapped_column(String(64), ForeignKey("ingestion_details.ingestion_id"), index=True)
     classification: Mapped[str] = mapped_column(String(64), nullable=False)
     count: Mapped[int] = mapped_column(Integer, default=0)
+    uploaded_date: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     ingestion_details: Mapped[IngestionDetails] = relationship(back_populates="job")
 

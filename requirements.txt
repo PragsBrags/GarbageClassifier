@@ -2,6 +2,9 @@ opencv-python
 PyYAML
 ultralytics
 numpy 
+fastapi
+uvicorn[standard]
+python-multipart
 
 SQLAlchemy
 psycopg2

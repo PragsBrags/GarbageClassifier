@@ -33,3 +33,12 @@ class ResultRepository:
         )
         db.add(row)
         db.flush()
+
+    def get_counts(self, db: Session, ingestion_id: str) -> dict[str, int]:
+        rows = (
+            db.query(ClassificationCount)
+            .filter_by(ingestion_id=ingestion_id)
+            .all()
+        )
+
+        return {row.classification: row.count for row in rows}
