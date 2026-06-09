@@ -1,0 +1,18 @@
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+}
+
+.result-image {
+  width: 100%;
+  margin: 10px 0;
+  border-radius: 8px;
+}
