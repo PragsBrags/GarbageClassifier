@@ -1,15 +1,25 @@
-const MODELS = ["YOLO", "Faster R-CNN", "SSD"];
+const MODELS = [
+  { label: "YOLO", value: "yolo" },
+  { label: "Faster R-CNN", value: "faster_rcnn" },
+  { label: "SSD", value: "ssd" },
+];
 
 export default function ModelSelector({ value, onChange }) {
   return (
-    <div className="card">
-      <label>Model</label>
-      <select value={value} onChange={onChange}>
-        <option value="">Select model</option>
+    <div className="form-field">
+      <label className="form-label">Model</label>
+      <div className="model-options">
         {MODELS.map((m) => (
-          <option key={m}>{m}</option>
+          <button
+            key={m.value}
+            className={`model-btn ${value === m.value ? "selected" : ""}`}
+            onClick={() => onChange(m.value)}
+            type="button"
+          >
+            {m.label}
+          </button>
         ))}
-      </select>
+      </div>
     </div>
   );
 }
