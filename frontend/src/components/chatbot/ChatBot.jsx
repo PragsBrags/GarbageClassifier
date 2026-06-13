@@ -15,27 +15,60 @@ export default function ChatBot() {
       text: "Hi! I'm your waste analysis assistant. Ask me about detection results or general recycling questions.",
     },
   ]);
+
   const bottomRef = useRef();
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
 
-  const send = (text) => {
+  const send = async (text) => {
     const userMsg = text || msg;
     if (!userMsg.trim()) return;
+
     setMsg("");
+
+    
     setChat((prev) => [...prev, { type: "user", text: userMsg }]);
-    setTimeout(() => {
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/chat/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          question: userMsg,
+          job_id: null, 
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Request failed");
+      }
+
+      
       setChat((prev) => [
         ...prev,
         {
           type: "ai",
-          text: "The chatbot backend is not connected yet. Once integrated, I'll answer questions about your detection results.",
+          text: data.answer,
+          job_id: data.job_id,
+          scope: data.scope,
+        },
+      ]);
+    } catch (err) {
+      setChat((prev) => [
+        ...prev,
+        {
+          type: "ai",
+          text: "Error: unable to connect to backend.",
           pending: true,
         },
       ]);
-    }, 400);
+    }
   };
 
   const handleKey = (e) => {
@@ -48,32 +81,37 @@ export default function ChatBot() {
   return (
     <div className="chatbot-page">
       <div className="chatbot-header">
-        <span className="chatbot-icon">♻</span>
+        <span className="chatbot-icon"></span>
+
         <div>
           <div className="chatbot-title">Waste Assistant</div>
           <div className="chatbot-subtitle">
             Ask about detection results or recycling
           </div>
         </div>
-        <div className="chatbot-status pending">Backend pending</div>
+
+        <div className="chatbot-status pending"></div>
       </div>
 
       <div className="chat-messages">
         {chat.map((c, i) => (
           <div key={i} className={`chat-bubble ${c.type}`}>
             <div className="bubble-content">{c.text}</div>
-            {c.sources && (
+
+            {c.scope && (
               <div className="bubble-sources">
-                Sources: {c.sources.join(", ")}
+                Scope: {c.scope}
               </div>
             )}
+
             {c.pending && (
               <div className="bubble-pending">
-                ⚙ POST /api/chat/ — not connected
+                ⚠ Backend connection issue
               </div>
             )}
           </div>
         ))}
+
         <div ref={bottomRef} />
       </div>
 
@@ -98,6 +136,7 @@ export default function ChatBot() {
           onKeyDown={handleKey}
           placeholder="Ask about waste, recycling, or detection results..."
         />
+
         <button className="chat-send" onClick={() => send()} type="button">
           Send
         </button>
